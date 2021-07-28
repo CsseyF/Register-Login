@@ -2,7 +2,7 @@ import { question } from "readline-sync";
 export {};
 
 class User {
-  user: string;
+  userName: string;
   password: string;
   firstName: string;
   secondName: string;
@@ -13,7 +13,7 @@ class User {
   projects: string[];
 
   constructor() {
-    this.user = "";
+    this.userName = "";
     this.password = "";
     this.firstName = "";
     this.secondName = "";
@@ -25,7 +25,7 @@ class User {
 }
 
 class Company {
-  user: string;
+  userName: string;
   password: string;
   employees: User[];
   projects: string[];
@@ -33,7 +33,7 @@ class Company {
   id: number;
 
   constructor() {
-    this.user = "";
+    this.userName = "";
     this.password = "";
     this.employees = [];
     this.projects = [];
@@ -42,7 +42,7 @@ class Company {
   }
 }
 var database = { users: [new User()], companies: [new Company()] };
-var currentLogin: User | null = null; //Armazena o login atual
+var currentLogin: string | null = null; //Armazena o login atual
 
 function main() {
   while (currentLogin == null) {
@@ -56,7 +56,7 @@ function login() {
   console.log(
     "Bem vindo! Digite seu usuario e senha. Caso nao tenha um, digite: new user.\nCaso seja uma empresa,\nDigite new company.\n"
   );
-  let userLogin: string = question("Digite seu usuario ");
+  let userLogin: string = question("Digite seu usuario: ");
 
   if (userLogin == "new user") {
     let currentRegister = registerUser();
@@ -70,20 +70,30 @@ function login() {
       currentRegisterC = registerCompany();
     }
   }
+  let userConfirm: boolean = false;
+  let userPassword: string = question("Digite sua senha: ");
 
-  let userPassword: string = question("Digite sua senha");
+  //Confirma username do usuário
   for (var item of database.users) {
-    if (userLogin == item.user) {
-      console.log("Usuario encontrado!");
-      return;
-    } 
+    if (userLogin == item.userName) {
+      if (userPassword == item.password) {
+        userConfirm = true;
+        currentLogin = item.userName;
+        console.log("Login efetuado com sucesso!");
+        return;
+      }
+    }
+  }
+
+  if (userConfirm == false) {
+    console.log("Usuario não encontrado!");
   }
 }
 function registerUser() {
   const nUser = new User();
   nUser.id = database.users.length;
 
-  nUser.user = question("Digite seu novo usuario: ");
+  nUser.userName = question("Digite seu novo usuario: ");
   nUser.password = question("Digite sua nova senha: ");
   nUser.firstName = question("Digite seu nome: ");
   nUser.secondName = question("Digite seu segundo nome: ");
@@ -92,7 +102,7 @@ function registerUser() {
 
   for (var userx of database.users) {
     //Verificação de user
-    if (nUser.user == userx.user) {
+    if (nUser.userName == userx.userName) {
       console.log(
         "Usuario já encontrado na base de dados. Favor cadastrar novamente."
       );
@@ -108,7 +118,7 @@ function registerCompany() {
   const nCompany = new Company();
   nCompany.id = database.companies.length;
 
-  nCompany.user = question("Digite seu novo usuario: ");
+  nCompany.userName = question("Digite seu novo usuario: ");
   nCompany.password = question("Digite sua nova senha: ");
   nCompany.creationDate = question(
     "Digite a data de criacao da empresa (yyyy-mm-dd): "
@@ -117,7 +127,7 @@ function registerCompany() {
 
   for (var usery of database.companies) {
     //Verificação de user
-    if (nCompany.user == usery.user) {
+    if (nCompany.userName == usery.userName) {
       console.log(
         "Usuario já encontrado na base de dados. Favor cadastrar novamente."
       );

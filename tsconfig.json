@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "strict": true
     },
     "files":["main.ts"]
+   
   
 }

@@ -11,6 +11,17 @@ class User {
 
   company: string;
   projects: string[];
+
+  constructor() {
+    this.user = "";
+    this.password = "";
+    this.firstName = "";
+    this.secondName = "";
+    this.age = 0;
+    this.id = 0;
+    this.company = "";
+    this.projects = [];
+  }
 }
 
 class Company {
@@ -20,11 +31,21 @@ class Company {
   projects: string[];
   creationDate: string | Date;
   id: number;
+
+  constructor() {
+    this.user = "";
+    this.password = "";
+    this.employees = [];
+    this.projects = [];
+    this.creationDate = "";
+    this.id = 0;
+  }
 }
 var database = { users: [new User()], companies: [new Company()] };
+var currentLogin: User | null = null; //Armazena o login atual
 
 function main() {
-  while (true) {
+  while (currentLogin == null) {
     login();
   }
 }
@@ -35,18 +56,27 @@ function login() {
   console.log(
     "Bem vindo! Digite seu usuario e senha. Caso nao tenha um, digite: new user.\nCaso seja uma empresa,\nDigite new company.\n"
   );
-  let userlogin: string = question("Digite seu usuario ");
-  if (userlogin == "new user") {
+  let userLogin: string = question("Digite seu usuario ");
+
+  if (userLogin == "new user") {
     let currentRegister = registerUser();
     while (currentRegister != true) {
       currentRegister = registerUser();
     }
-  }
-  if (userlogin == "new company") {
+    return;
+  } else if (userLogin == "new company") {
     let currentRegisterC = registerCompany();
     while (currentRegisterC != true) {
       currentRegisterC = registerCompany();
     }
+  }
+
+  let userPassword: string = question("Digite sua senha");
+  for (var item of database.users) {
+    if (userLogin == item.user) {
+      console.log("Usuario encontrado!");
+      return;
+    } 
   }
 }
 function registerUser() {
